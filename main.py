@@ -21,7 +21,11 @@ for file in os.listdir(directory):
 
 all_df = pd.concat(dfs, ignore_index=True)
 
-print(all_df.columns)
+# Search by Professor
+def search_by_professor(professor):
+    professor_df = all_df[all_df['Primary I']]
+
+
 
 
 
