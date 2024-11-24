@@ -20,8 +20,8 @@ for file in os.listdir(directory):
         dfs.append(df)
 
 all_df = pd.concat(dfs, ignore_index=True)
-print(all_df)
 
+print(all_df.columns)
 
 
 
