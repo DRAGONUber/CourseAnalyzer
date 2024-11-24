@@ -23,7 +23,31 @@ all_df = pd.concat(dfs, ignore_index=True)
 
 # Search by Professor
 def search_by_professor(professor):
-    professor_df = all_df[all_df['Primary I']]
+    all_df[['Last Name', 'First Name']] = all_df['Primary Instructor'].str.split(',', expand=True)
+    all_df['Last Name'] = all_df['Last Name'].str.strip()
+    all_df['First Name'] = all_df['First Name'].str.strip()
+    professor_df = all_df[
+        all_df['Last Name'].str.contains(professor, case=False, na=False) |
+        all_df['First Name'].str.contains(professor, case=False, na=False)
+    ]
+
+    return professor_df
+
+def search_by_course(course, num):
+    course_df = all_df[(all_df['CRS SUBJ CD'] == course) & (all_df['CRS NBR'] == num)]
+
+    return course_df
+
+
+
+
+
+
+
+
+
+
+
 
 
 
