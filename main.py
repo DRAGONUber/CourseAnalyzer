@@ -33,8 +33,8 @@ def search_by_professor(professor):
                 
     return professor_df
 
-def search_by_course(course, num):
-    course_df = all_df[(all_df['CRS SUBJ CD'] == course) & (all_df['CRS NBR'] == num)]
+def search_by_course_and_professor(course, num, professor):
+    course_df = all_df[(all_df['CRS SUBJ CD'] == course) & (all_df['CRS NBR'] == num) & (search_by_professor(professor))]
 
     return course_df
 
@@ -68,6 +68,12 @@ def main():
         print(f"A list of {professor_name} courses:")
         for lab, row in unique_courses.iterrows():
             print(f"{row['CRS SUBJ CD']} {row['CRS NBR']}")
+    if num == 2:
+        course = input('Enter department: ')
+        course_num = int(input('Enter course number: '))
+        df = search_by_course_and_professor(course, course_num)
+
+
 
 
 
