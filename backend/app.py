@@ -1,22 +1,26 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_migrate import Migrate
+import os
 
-db = SQLAlchemy()
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object('config.Config')
-    CORS(app)
-    db.init_app(app)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+CORS(app)
 
-    with app.app_context():
-        from routes.grade_routes import grade_routes
-        app.register_blueprint(grade_routes)
-        db.create_all()
+# Example model
+class GradeDistribution(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    term = db.Column(db.String(50), nullable=False)
+    year = db.Column(db.String(4), nullable=False)
 
-    return app
+@app.route('/')
+def home():
+    return "Flask app is running!"
 
 if __name__ == "__main__":
-    app = create_app()
     app.run(debug=True)
