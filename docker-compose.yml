@@ -1,1 +1,26 @@
+services:
+  db:
+    image: postgres
+    restart: always
+  # user and password are defined in the .env file
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - analyzer-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
 
+
+
+volumes:
+  analyzer-data:
+  
