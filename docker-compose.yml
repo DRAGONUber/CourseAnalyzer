@@ -11,11 +11,7 @@ services:
       - analyzer-data:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_PORT}:5432"
-    healthcheck:
-      test: [ "CMD", "pg_isready" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    
     env_file:
       - .env
 
