@@ -1,22 +1,35 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_migrate import Migrate
+from dotenv import load_dotenv
 import os
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+from db import db
+from models import GradeDistribution  # Import models after db initialization
 
-db = SQLAlchemy(app)
+# Load environment variables from .env file
+load_dotenv()
+
+app = Flask(__name__)
+
+# Fetch DATABASE_URL or raise an error if it's not set
+database_uri = os.getenv('DATABASE_URL')
+print(f"DATABASE_URL: {database_uri}")  # Debugging statement
+
+if not database_uri:
+    raise RuntimeError("DATABASE_URL environment variable is not set.")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
+# Initialize extensions
+db.init_app(app)
 migrate = Migrate(app, db)
 CORS(app)
 
-# Example model
-class GradeDistribution(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    term = db.Column(db.String(50), nullable=False)
-    year = db.Column(db.String(4), nullable=False)
+# Import and register Blueprints after initializing extensions
+from routes.grade_routes import grade_routes
+app.register_blueprint(grade_routes, url_prefix="/api")
 
 @app.route('/')
 def home():

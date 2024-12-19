@@ -1,6 +1,8 @@
-from app import db
+from db import db
 
 class GradeDistribution(db.Model):
+    __tablename__ = 'grade_distribution'
+    
     id = db.Column(db.Integer, primary_key=True)
     term = db.Column(db.String(50), nullable=False)
     year = db.Column(db.String(4), nullable=False)
